@@ -1,0 +1,27 @@
+curl -i -X POST http://localhost:3000/signup -d '{
+  "user": {
+    "email": "test7@example.com",
+    "password": "password",
+    "password_confirmation": "password"
+  }
+}' -H "Content-Type: application/json"
+
+
+curl -i -X POST http://localhost:3000/login -d '{
+  "user": {
+    "email": "user1@example.com",
+    "password": "password"
+  }
+}' -H "Content-Type: application/json"
+
+
+curl -i -X GET http://localhost:3000/items -H "<Token>"
+
+curl -i -X GET http://localhost:3000/sale -H "<Token>"
+
+curl -i -X POST http://local xhost:3000/purchase -d '{
+  "sales": [ { "item_id": 1, "flavor_id": 1, "quantity": 2 }, { "item_id": 2, "flavor_id": 2, "quantity": 1 } ],
+  "user": {
+    "user_id": 1
+  }
+}' -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNzIxNjMwNTc3LCJleHAiOjE3MjE3MTY5NzcsImp0aSI6IjM3OGRiOWQyLWY5MmUtNDVhZi1iZWRhLTM5NmZiMzk2YzVkMCJ9.2KrYT17oa2Nuh_XBuNKR6OPwCwPQXwttw0pOfqvjM1U" -H "Content-Type: application/json"
