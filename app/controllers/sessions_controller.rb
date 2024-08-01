@@ -7,8 +7,7 @@ class SessionsController < Devise::SessionsController
     user = User.find_by(email: params[:user][:email])
     if user&.valid_for_authentication? { user.valid_password?(params[:user][:password]) }
       sign_in(resource_name, user)
-      # render json: { message: 'Logged in successfully.' }, status: :ok
-      render json: { message: 'Logged in successfully.', user: user.as_json(only: [:id, :email, :admin]) }, status: :ok
+      render json: { message: 'Logged in successfully.', user: user.as_json(only: [:id, :admin]) }, status: :ok
     else
       render_invalid_login_attempt
     end
@@ -25,7 +24,12 @@ class SessionsController < Devise::SessionsController
   end
 
   def respond_to_on_destroy
-    head :no_content
+    # head :no_content
+    if current_user
+      render json: { message: 'Logged out successfully.' }, status: :ok
+    else
+      render json: { errors: ['User was not logged in.'] }, status: :unauthorized
+    end
   end
 end
 

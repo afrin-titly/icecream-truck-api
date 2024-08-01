@@ -1,6 +1,7 @@
 class ItemsController < ApplicationController
-  before_action :authenticate_user!, except: [:index]
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_item, only: %i[show update destroy]
+  # FIX ME: only admin can edit/create/delete
 
   # GET /items
   def index
@@ -10,7 +11,6 @@ class ItemsController < ApplicationController
 
   # GET /items/1
   def show
-    Rails.logger.debug "------user------#{current_user&.admin?}"
     render json: @item, status: :ok
   end
 
@@ -49,6 +49,6 @@ class ItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def item_params
-      params.require(:item).permit(:name, :price, :category_id, :stock, :created_at, :updated_at, flavor_attributes: [:name])
+      params.require(:item).permit(:name, :price, :category_id, :flavor_id, :stock, :created_at, :updated_at)
     end
 end

@@ -1,5 +1,7 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :set_category, only: %i[ show update destroy ]
+    # FIX ME: only admin can edit/create/delete
 
   # GET /categories or /categories.json
   def index

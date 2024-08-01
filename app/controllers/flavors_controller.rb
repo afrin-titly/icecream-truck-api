@@ -1,5 +1,7 @@
 class FlavorsController < ApplicationController
-  before_action :set_flavor, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :set_flavor, only: %i[ show update destroy ]
+  # FIX ME: only admin can edit/create/delete
 
   # GET /flavors or /flavors.json
   def index

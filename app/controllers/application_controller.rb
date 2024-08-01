@@ -3,10 +3,6 @@ class ApplicationController < ActionController::API
 
     rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
-    # def route_not_found
-    #   render json: { error: "Route not found" }, status: :not_found
-    # end
-
     protected
 
     def configure_permitted_parameters
