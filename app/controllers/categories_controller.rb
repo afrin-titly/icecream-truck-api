@@ -1,7 +1,7 @@
 class CategoriesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_category, only: %i[ show update destroy ]
-    # FIX ME: only admin can edit/create/delete
+  before_action :is_admin, only: %i[create update destroy index show]
 
   # GET /categories or /categories.json
   def index
@@ -19,7 +19,7 @@ class CategoriesController < ApplicationController
     @category = Category.new(category_params)
 
     if @category.save
-      render json: @category, status: :created, location: @category
+      render json: { category: @category, message: "Category created successfully!" }, status: :created, location: @category
     else
       render json: @category.errors, status: :unprocessable_entity
     end

@@ -1,7 +1,7 @@
 class FlavorsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_flavor, only: %i[ show update destroy ]
-  # FIX ME: only admin can edit/create/delete
+  before_action :is_admin, only: %i[create update destroy index show]
 
   # GET /flavors or /flavors.json
   def index
@@ -19,7 +19,7 @@ class FlavorsController < ApplicationController
     @flavor = Flavor.new(flavor_params)
 
     if @flavor.save
-      render json: @flavor, status: :created, location: @flavor
+      render json: {flavor: @flavor, message: "Flavor created successfully!" }, status: :created, location: @flavor
     else
       render json: @flavor.errors, status: :unprocessable_entity
     end

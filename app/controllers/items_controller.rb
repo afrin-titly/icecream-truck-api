@@ -1,7 +1,7 @@
 class ItemsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_item, only: %i[show update destroy]
-  # FIX ME: only admin can edit/create/delete
+  before_action :is_admin, only: %i[create update destroy]
 
   # GET /items
   def index

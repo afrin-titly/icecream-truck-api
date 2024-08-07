@@ -3,6 +3,12 @@ class ApplicationController < ActionController::API
 
     rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
+    def is_admin
+      unless current_user.admin?
+        render json: {error: "Access Denied"}, status: :unauthorized
+      end
+    end
+
     protected
 
     def configure_permitted_parameters
