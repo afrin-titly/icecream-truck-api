@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     post 'signup', to: 'registrations#create'
   end
 
-  get '/sale', to: 'sales#total_sale', as: 'sale'
+  get '/sales/total_sales', to: 'sales#total_sales', as: 'sale'
   post '/purchase', to: 'sales#purchase', as: 'purchase'
   resources :flavors
   resources :sales

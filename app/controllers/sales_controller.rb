@@ -37,11 +37,28 @@ class SalesController < ApplicationController
     render json: { message: 'Validation error', error: e.message }, status: :unprocessable_entity
   end
 
-  # GET /sale
-  def total_sale
-    total_sale = Sale.sum(:total_price)
 
-    render json: { total_sales: total_sale}
+
+  # GET /sales/total_sales
+  # Expected params: { month: '2024-08' }
+  def total_sales
+    # Parse the month parameter
+    month = params[:month]
+    start_date = Date.parse("#{month}-01")
+    end_date = start_date.end_of_month
+
+    # Query to get the total amount for each order in the specified month
+    orders = Order
+               .where(created_at: start_date..end_date)
+               .select('order_number, SUM(sales.total_price) as total_amount')
+               .joins(:sales)
+               .group('orders.id')
+               .order('orders.created_at')
+
+    # Render the result in JSON format
+    render json: { orders: orders.map { |order| { order_number: order.order_number, total_amount: order.total_amount } } }
+  rescue ArgumentError => e
+    render json: { message: 'Invalid month format', error: e.message }, status: :unprocessable_entity
   end
 
   private
