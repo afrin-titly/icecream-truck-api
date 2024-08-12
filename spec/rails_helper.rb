@@ -5,6 +5,8 @@ require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
+# require "shoulda/matchers"
+# require "shoulda/matchers/integrations/rspec"
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -60,16 +62,20 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  # spec/rails_helper.rb
-
   config.include FactoryBot::Syntax::Methods
 
-  # Include Warden test helpers for controller specs
   config.include Devise::Test::ControllerHelpers, type: :controller
 
-  # Include FactoryBot methods
   config.include FactoryBot::Syntax::Methods
 
-  # Add Devise helpers for request specs if you're testing API requests
   config.include Devise::Test::IntegrationHelpers, type: :request
+
+  Shoulda::Matchers.configure do |config|
+    config.integrate do |with|
+      with.test_framework :rspec
+
+      with.library :rails
+      # with.library :active_model
+    end
+  end
 end
