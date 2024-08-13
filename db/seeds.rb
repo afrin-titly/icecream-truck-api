@@ -1,55 +1,40 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
-
-# Create Categories
-Category.create!([
-  { name: 'Ice Cream' },
-  { name: 'Shaved Ice' },
-  { name: 'Snack Bars' }
+# Categories
+categories = Category.create!([
+  { name: "Chocolate" },
+  { name: "Vanilla" },
+  { name: "Strawberry" }
 ])
 
-# Create Flavors
-Flavor.create!([
-  { name: 'Chocolate' },
-  { name: 'Vanilla' },
-  { name: 'Strawberry' },
-  { name: 'Mint' }
+# Flavors
+flavors = Flavor.create!([
+  { name: "Dark Chocolate" },
+  { name: "French Vanilla" },
+  { name: "Strawberry Swirl" }
 ])
 
-# Create Users
-User.create!([
-  { email: 'user1@example.com', password: 'password' },
-  { email: 'user2@example.com', password: 'password' }
+# Items
+items = Item.create!([
+  { name: "Chocolate Bar", price: 2.99, category: categories[0], flavor: flavors[0], stock: 100 },
+  { name: "Vanilla Ice Cream", price: 4.99, category: categories[1], flavor: flavors[1], stock: 50 },
+  { name: "Strawberry Milkshake", price: 3.49, category: categories[2], flavor: flavors[2], stock: 30 }
 ])
 
-# Create Items
-ice_cream_category = Category.find_by(name: 'Ice Cream')
-shaved_ice_category = Category.find_by(name: 'Shaved Ice')
-
-Item.create!([
-  { name: 'Chocolate Ice Cream', price: 3.5, flavor_id: Flavor.find_by(name: 'Chocolate').id, category_id: ice_cream_category.id, stock: 20 },
-  { name: 'Vanilla Ice Cream', price: 3.5, flavor_id: Flavor.find_by(name: 'Vanilla').id, category_id: ice_cream_category.id, stock: 15 },
-  { name: 'Strawberry Ice Cream', price: 4.0, flavor_id: Flavor.find_by(name: 'Strawberry').id, category_id: ice_cream_category.id, stock: 10 },
-  { name: 'Mint Ice Cream', price: 4.0, flavor_id: Flavor.find_by(name: 'Mint').id, category_id: ice_cream_category.id, stock: 10 },
-  { name: 'Shaved Ice', price: 2.0, flavor_id: nil, category_id: shaved_ice_category.id, stock: 30 }
+# Users
+users = User.create!([
+  { email: "admin@example.com", password: "password", admin: true },
+  { email: "user1@example.com", password: "password", admin: false },
+  { email: "user2@example.com", password: "password", admin: false }
 ])
 
-# Create Orders with Sales (example)
-User.all.each do |user|
-  Order.transaction do
-    order = Order.create!(user: user)
+# Orders
+orders = Order.create!([
+  { order_number: "ORD001", user: users[1], total_amount: 15.47 },
+  { order_number: "ORD002", user: users[2], total_amount: 9.98 }
+])
 
-    # Example sales for the order
-    Sale.create!([
-      { item_id: Item.find_by(name: 'Chocolate Ice Cream').id, quantity: 2, total_price: 7.0, order_id: order.id },
-      { item_id: Item.find_by(name: 'Strawberry Ice Cream').id, quantity: 1, total_price: 4.0, order_id: order.id }
-    ])
-
-    order.calculate_total_price
-  end
-end
+# Sales
+sales = Sale.create!([
+  { item: items[0], order: orders[0], quantity: 2, total_price: 5.98 },
+  { item: items[1], order: orders[0], quantity: 2, total_price: 9.98 },
+  { item: items[2], order: orders[1], quantity: 3, total_price: 10.47 }
+])
