@@ -10,18 +10,18 @@ class SalesController < ApplicationController
       @order = Order.new(user: @user)
 
       @items.each do |item|
-        if item.item.valid? && item.item.stock >= item.quantity
+        if item.item.valid? && item.item.stock >= item.quantity.to_i
           sale = @order.sales.build(
             item_id: item.item_id,
             quantity: item.quantity,
-            total_price: item.item.price * item.quantity
+            total_price: item.item.price * item.quantity.to_f
           )
 
           unless sale.save
             render json: { message: 'Failed to create sale record' }, status: :unprocessable_entity
             raise ActiveRecord::Rollback
           end
-          item.item.update(stock: item.item.stock - item.quantity)
+          item.item.update(stock: item.item.stock - item.quantity.to_i)
         else
           render json: { message: 'SO SORRY!', error: 'Insufficient stock or invalid item' }, status: :unprocessable_entity
           raise ActiveRecord::Rollback
@@ -42,12 +42,15 @@ class SalesController < ApplicationController
   # GET /sales/total_sales
   # Expected params: { month: '2024-08' }
   def total_sales
-    # Parse the month parameter
     month = params[:month]
+
+    unless month =~ /^\d{4}-\d{2}$/
+      raise ArgumentError, "Invalid month format"
+    end
+
     start_date = Date.parse("#{month}-01")
     end_date = start_date.end_of_month
 
-    # Query to get the total amount for each order in the specified month
     orders = Order
                .where(created_at: start_date..end_date)
                .select('order_number, SUM(sales.total_price) as total_amount')
@@ -55,7 +58,6 @@ class SalesController < ApplicationController
                .group('orders.id')
                .order('orders.created_at')
 
-    # Render the result in JSON format
     render json: { orders: orders.map { |order| { order_number: order.order_number, total_amount: order.total_amount } } }
   rescue ArgumentError => e
     render json: { message: 'Invalid month format', error: e.message }, status: :unprocessable_entity
@@ -65,6 +67,7 @@ class SalesController < ApplicationController
 
   def set_items
     @items = []
+
     params.require(:sales).each do |sale_params|
       item = OpenStruct.new(
         item_id: sale_params[:item_id],
@@ -77,7 +80,7 @@ class SalesController < ApplicationController
         raise ActiveRecord::RecordNotFound, "Item not found with item_id: #{sale_params[:item_id]} and flavor_id: #{sale_params[:flavor_id]}"
       end
 
-      unless item.item.stock >= item.quantity
+      unless item.item.stock >= item.quantity.to_i
         render json: { message: 'SO SORRY!', error: "Insufficient stock for item id: #{item.item.id} name: #{item.item.name}" }, status: :unprocessable_entity
       end
 

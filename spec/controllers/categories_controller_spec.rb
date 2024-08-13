@@ -107,15 +107,8 @@ RSpec.describe CategoriesController, type: :controller do
   end
 
   describe "Authorization" do
-    context "when user is not admin" do
-      before do
-        request.headers.merge!(user_headers)
-      end
-
-      it "denies access to non-admin user" do
-        get :index
-        expect(response).to have_http_status(:unauthorized)
-      end
+    it_behaves_like "admin authorization" do
+      subject { get :index }
     end
   end
 end

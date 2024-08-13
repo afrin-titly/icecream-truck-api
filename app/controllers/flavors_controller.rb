@@ -1,7 +1,7 @@
 class FlavorsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_flavor, only: %i[ show update destroy ]
-  before_action :is_admin, only: %i[create update destroy index show]
+  before_action :is_admin
 
   # GET /flavors or /flavors.json
   def index

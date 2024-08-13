@@ -9,7 +9,7 @@ WORKDIR /railsapp
 # Copy the Gemfile and Gemfile.lock into the working directory
 COPY ./Gemfile /railsapp/Gemfile
 
-# COPY Gemfile.lock /railsapp/Gemfile.lock
+COPY Gemfile.lock /railsapp/Gemfile.lock
 
 # Install gems
 RUN bundle install

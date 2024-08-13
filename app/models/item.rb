@@ -5,6 +5,8 @@ class Item < ApplicationRecord
 
   accepts_nested_attributes_for :flavor
 
+  validates :name, :price, :stock, presence: true
+
   def as_json(options = {})
     super(options.merge(except: :flavor_id, include: :flavor))
   end
