@@ -1,24 +1,17 @@
-# README
+## What is this project?
+Mini project which provides API for managing icecream truck. It has 2 types of user.
+1. admin - Manager of the inventory
+2. Customer - Can order items
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## How to start locally?
+You need to install docker to try this project locally.
+```
+cd /path/to/icecream-truck-api
+docker compose up --build
+```
+## Improvement points
+- Add pagination for all items
+- Add image for items
+- Payment
+- CI/CD
+- Logging can improved
